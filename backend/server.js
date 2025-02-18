@@ -1,26 +1,46 @@
 require('dotenv').config();
 const express = require('express');
+const session = require('express-session');
+const bodyParser = require('body-parser');
 const db = require('./config/db'); // Import your db.js to establish the MySQL connection
 
-// // Import routes
+// Import routes
 const authRoutes = require('./routes/authRoutes');
-// const customerRoutes = require('./routes/customerRoutes');
-// const dishRoutes = require('./routes/dishRoutes');
-// const orderRoutes = require('./routes/orderRoutes');
-// const restaurantRoutes = require('./routes/restaurantRoutes');
+
+/* TODO: Import other route files as needed
+
+const customerRoutes = require('./routes/customerRoutes');
+const dishRoutes = require('./routes/dishRoutes');
+const orderRoutes = require('./routes/orderRoutes');
+const restaurantRoutes = require('./routes/restaurantRoutes');
+
+*/
 
 // Express app
 const app = express();
 
 // // Middleware
-app.use(express.json());
+app.use(bodyParser.json());
 
-// // Route Handlers
+// Session
+app.use(session({
+    secret: 'your_secret_key', // Replace with an actual secret key
+    resave: false,             // Don't save the session if unmodified
+    saveUninitialized: false,  // Only save the session if it is modified
+    cookie: { secure: false }  // Use `true` if using HTTPS
+}));
+
+// Route Handlers
 app.use('/api/auth', authRoutes);
-// app.use('/api/customers', customerRoutes);
-// app.use('/api/dishes', dishRoutes);
-// app.use('/api/orders', orderRoutes);
-// app.use('/api/restaurants', restaurantRoutes);
+
+/* TODO: Import other route files as needed
+
+app.use('/api/customers', customerRoutes);
+app.use('/api/dishes', dishRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/restaurants', restaurantRoutes);
+
+*/
 
 // Establish the database connection and start the server
 db.connect((err) => {

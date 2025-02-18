@@ -1,71 +1,59 @@
 const bcrypt = require('bcrypt');
-const Customer = require('../models/Customer');
+const Customer = require('../models/Customer'); // Your Sequelize model
 
-// Signup a new customer
-const signup = async (req, res) => {
+// Signup
+exports.signup = async (req, res) => {
   const { name, email, password } = req.body;
 
   try {
-    // Check if the user already exists
-    const existingCustomer = await Customer.findOne({ where: { email } });
-    if (existingCustomer) {
-      return res.status(400).json({ message: 'User already exists' });
-    }
-
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create a new customer
-    const newCustomer = await Customer.create({
-        name,
-        email,
-        password: hashedPassword,
-        profilePicture: '', // Default empty string
-        country: '',        // Default empty string
-        state: '',          // Default empty string
-      });
-      
+    // Create the user in the database
+    await Customer.create({ name, email, password: hashedPassword });
 
-    // Respond with the newly created user
-    res.status(201).json({
-      message: 'User registered successfully',
-      customer: { id: newCustomer.id, name: newCustomer.name, email: newCustomer.email },
-    });
+    res.status(201).json({ message: 'User signed up successfully' });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Error signing up' });
   }
 };
 
-// Login a customer
-const login = async (req, res) => {
+// Login
+exports.login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Find the user
-    const customer = await Customer.findOne({ where: { email } });
-    if (!customer) {
-      return res.status(404).json({ message: 'User not found' });
-    }
+    // Find user by email
+    const user = await Customer.findOne({ where: { email } });
+    if (!user) return res.status(404).json({ message: 'User not found' });
 
-    // Check the password
-    const isPasswordValid = await bcrypt.compare(password, customer.password);
-    if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Invalid password' });
-    }
+    // Compare password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
 
-    // Respond with success message
-    res.status(200).json({
-      message: 'Login successful',
-      customer: { id: customer.id, name: customer.name, email: customer.email },
-    });
+    // Store user information in session
+    req.session.user = { id: user.id, email: user.email };
+    res.json({ message: 'User logged in successfully' });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Error logging in' });
   }
 };
 
-module.exports = {
-  signup,
-  login,
+// Logout
+exports.logout = (req, res) => {
+  req.session.destroy((err) => {
+    if (err) return res.status(500).json({ message: 'Error logging out' });
+    res.json({ message: 'User logged out successfully' });
+  });
+};
+
+// Check if a user is authenticated (middleware)
+exports.isAuthenticated = (req, res, next) => {
+  if (req.session.user) {
+    next(); // User is authenticated
+  } else {
+    res.status(401).json({ message: 'Unauthorized' });
+  }
 };
