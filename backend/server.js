@@ -5,7 +5,8 @@ const bodyParser = require('body-parser');
 const db = require('./config/db'); // Import your db.js to establish the MySQL connection
 
 // Import routes
-const authRoutes = require('./routes/authRoutes');
+const authCustomerRoutes = require('./routes/authCustomerRoutes');
+const authRestaurantRoutes = require('./routes/authRestaurantRoutes');
 
 /* TODO: Import other route files as needed
 
@@ -27,13 +28,14 @@ app.use(session({
     secret: 'your_secret_key', // Replace with an actual secret key
     resave: false,             // Don't save the session if unmodified
     saveUninitialized: false,  // Only save the session if it is modified
-    cookie: { secure: false }  // Use `true` if using HTTPS
+    cookie: { secure: false, httpOnly: true }  // Use `true` if using HTTPS
 }));
 
 // Route Handlers
-app.use('/api/auth', authRoutes);
+app.use('/api/authCustomer', authCustomerRoutes);
+app.use('/api/authRestaurant', authRestaurantRoutes);
 
-/* TODO: Import other route files as needed
+/* TODO: Import other route files as needed; add protected routes from controller?
 
 app.use('/api/customers', customerRoutes);
 app.use('/api/dishes', dishRoutes);

@@ -6,7 +6,8 @@ Our backend structure is as follows:
   ├── config/
   │   └── db.js          # MySQL connection setup
   ├── controllers/       # Business logic for each route
-  │   ├── authController.js
+  │   ├── authCustomerController.js
+  |   ├── authRestaurantController.js
   │   ├── customerController.js
   │   ├── restaurantController.js
   │   ├── dishController.js
@@ -21,7 +22,8 @@ Our backend structure is as follows:
   │   ├── Order.js
   │   └── Favorite.js
   ├── routes/            # API routes
-  │   ├── authRoutes.js
+  │   ├── authCustomerRoutes.js
+  │   ├── authRestaurantRoutes.js
   │   ├── customerRoutes.js
   │   ├── restaurantRoutes.js
   │   ├── dishRoutes.js
