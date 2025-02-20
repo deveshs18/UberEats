@@ -7,6 +7,7 @@ const db = require('./config/db'); // Import your db.js to establish the MySQL c
 // Import routes
 const authCustomerRoutes = require('./routes/authCustomerRoutes');
 const authRestaurantRoutes = require('./routes/authRestaurantRoutes');
+const customerRoutes = require('./routes/customerRoutes');
 
 /* TODO: Import other route files as needed
 
@@ -34,6 +35,7 @@ app.use(session({
 // Route Handlers
 app.use('/api/authCustomer', authCustomerRoutes);
 app.use('/api/authRestaurant', authRestaurantRoutes);
+app.use('/api/customers', customerRoutes);
 
 /* TODO: Import other route files as needed; add protected routes from controller?
 

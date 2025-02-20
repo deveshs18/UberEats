@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/sequelize'); // Import Sequelize instance
+const sequelize = require('../config/sequelize');
 
 const Customer = sequelize.define('Customer', {
   id: {
@@ -24,7 +24,7 @@ const Customer = sequelize.define('Customer', {
     allowNull: false,
   },
   profilePicture: {
-    type: DataTypes.STRING, // Assuming it's a URL string
+    type: DataTypes.STRING, // Fix this in database schema?
     allowNull: true,
   },
   country: {
@@ -38,8 +38,8 @@ const Customer = sequelize.define('Customer', {
 }, {
   tableName: 'Customer',
   timestamps: true,
-  createdAt: 'created_at',  // Mapping Sequelize's createdAt to database's 'created_at'
-  updatedAt: 'updated_at',  // Mapping Sequelize's updatedAt to database's 'updated_at'
+  createdAt: 'created_at',  
+  updatedAt: 'updated_at', 
 });
 
 module.exports = Customer;

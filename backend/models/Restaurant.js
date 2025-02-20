@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/sequelize'); // Import Sequelize instance
+const sequelize = require('../config/sequelize');
 
 const Restaurant = sequelize.define('Restaurant', {
   id: {
@@ -36,18 +36,18 @@ const Restaurant = sequelize.define('Restaurant', {
     allowNull: true,
   },
   timings: {
-    type: DataTypes.JSON, // JSON type to store flexible timing information
+    type: DataTypes.JSON,
     allowNull: true,
   },
   profilePicture: {
     type: DataTypes.STRING,
-    allowNull: true, // Profile picture URL, nullable
+    allowNull: true, 
   },
 }, {
   tableName: 'Restaurant',
-  timestamps: true, // Enable Sequelize timestamps
-  createdAt: 'created_at', // Map Sequelize's createdAt to 'created_at' in DB
-  updatedAt: 'updated_at', // Map Sequelize's updatedAt to 'updated_at' in DB
+  timestamps: true, 
+  createdAt: 'created_at', 
+  updatedAt: 'updated_at',
 });
 
 module.exports = Restaurant;
