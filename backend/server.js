@@ -2,21 +2,15 @@ require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
-const db = require('./config/db'); // Import your db.js to establish the MySQL connection
+const db = require('./config/db');
 
 // Import routes
 const authCustomerRoutes = require('./routes/authCustomerRoutes');
 const authRestaurantRoutes = require('./routes/authRestaurantRoutes');
 const customerRoutes = require('./routes/customerRoutes');
-
-/* TODO: Import other route files as needed
-
-const customerRoutes = require('./routes/customerRoutes');
 const dishRoutes = require('./routes/dishRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const restaurantRoutes = require('./routes/restaurantRoutes');
-
-*/
 
 // Express app
 const app = express();
@@ -36,15 +30,9 @@ app.use(session({
 app.use('/api/authCustomer', authCustomerRoutes);
 app.use('/api/authRestaurant', authRestaurantRoutes);
 app.use('/api/customers', customerRoutes);
-
-/* TODO: Import other route files as needed; add protected routes from controller?
-
-app.use('/api/customers', customerRoutes);
-app.use('/api/dishes', dishRoutes);
+app.use('/api', dishRoutes);    // Follows /Restaurant/{restaurantId}/dishes
 app.use('/api/orders', orderRoutes);
 app.use('/api/restaurants', restaurantRoutes);
-
-*/
 
 // Establish the database connection and start the server
 db.connect((err) => {
