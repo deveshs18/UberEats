@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/sequelize');
+const Restaurant = require('./Restaurant');
+const Customer = require('./Customer');
 
 const Favorite = sequelize.define('Favorite', {
   id: {
@@ -24,16 +26,12 @@ const Favorite = sequelize.define('Favorite', {
     },
   },
 }, {
-  tableName: 'Favorite',
-  timestamps: false,
-  uniqueKeys: {
-    unique_favorite: {
-      fields: ['customer_id', 'restaurant_id'],
-    },
-  },
+  tableName: 'Favorites',
+  timestamps: true,
 });
 
-
-Favorite.belongsTo(require('./Restaurant'), { foreignKey: 'restaurant_id' });
+// Define associations directly
+Favorite.belongsTo(Restaurant, { foreignKey: 'restaurant_id' });
+Favorite.belongsTo(Customer, { foreignKey: 'customer_id' });
 
 module.exports = Favorite;

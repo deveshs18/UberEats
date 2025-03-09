@@ -1,0 +1,153 @@
+.orders-container {
+    max-width: 1200px;
+    margin: 0;
+    padding: 20px;
+    width: calc(100% - 40px);
+}
+
+.orders-container h2 {
+    text-align: left;
+    color: #333;
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+}
+
+.orders-list {
+    display: grid;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.order-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 100%;
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-bottom: 1px solid #eee;
+}
+
+.order-header h3 {
+    margin: 0;
+    color: #333;
+}
+
+.order-status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.order-status.new {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.order-status.preparing {
+    background: #cce5ff;
+    color: #004085;
+}
+
+.order-status.on-way {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.order-status.ready {
+    background: #d4edda;
+    color: #155724;
+}
+
+.order-status.delivered {
+    background: #c3e6cb;
+    color: #1e7e34;
+}
+
+.order-status.picked-up {
+    background: #c3e6cb;
+    color: #1e7e34;
+}
+
+.order-status.cancelled {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.order-details {
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.order-details p {
+    margin: 0.5rem 0;
+    color: #666;
+}
+
+.order-items {
+    padding: 1rem;
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+.order-item:last-child {
+    border-bottom: none;
+}
+
+.order-actions {
+    padding: 1rem;
+    background: #f8f9fa;
+    text-align: right;
+}
+
+.cancel-button {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.cancel-button:hover {
+    background: #c82333;
+}
+
+.orders-loading,
+.orders-error {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+}
+
+.orders-error {
+    color: #dc3545;
+}
+
+@media (max-width: 768px) {
+    .orders-container {
+        padding: 10px;
+        width: calc(100% - 20px);
+        margin: 0;
+    }
+    
+    .order-header {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: left;
+    }
+}

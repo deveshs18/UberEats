@@ -1,0 +1,112 @@
+.category-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative;
+    margin: 20px 0;
+    width: 100%;
+    padding: 0;
+}
+
+.category-buttons {
+    display: flex;
+    overflow-x: auto;
+    gap: 20px;
+    white-space: nowrap;
+    scroll-behavior: smooth;
+    width: 100%;
+    padding: 20px 40px;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.category-buttons::-webkit-scrollbar {
+    display: none;
+}
+
+.category-buttons button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.2s ease-in-out;
+    min-width: 80px;
+}
+
+.category-buttons button:hover {
+    transform: scale(1.05);
+}
+
+.category-buttons button img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.category-buttons button span {
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    text-align: center;
+}
+
+/* 🔄 Arrow Buttons */
+.scroll-arrow {
+    position: absolute;
+    background: white;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    transition: all 0.2s ease;
+}
+
+.scroll-arrow:hover {
+    background: #f8f8f8;
+    transform: scale(1.1);
+}
+
+.scroll-arrow.left {
+    left: 5px;
+}
+
+.scroll-arrow.right {
+    right: 5px;
+}
+
+@media (max-width: 768px) {
+    .category-container {
+        padding: 0;
+        margin: 10px 0;
+    }
+
+    .category-buttons {
+        padding: 15px 35px;
+        gap: 15px;
+    }
+
+    .category-buttons button {
+        min-width: 70px;
+    }
+
+    .category-buttons button img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .scroll-arrow {
+        width: 28px;
+        height: 28px;
+    }
+}

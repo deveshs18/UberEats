@@ -1,0 +1,98 @@
+/* 🟢 Centered Login Container */
+.login-container {
+    width: 350px;
+    margin: 60px auto;
+    padding: 20px;
+}
+
+.login-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+/* 🏆 Title Styling */
+.login-card h2 {
+    margin-bottom: 15px;
+    font-size: 24px;
+    color: #333;
+}
+
+/* ❌ Error Message */
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-bottom: 10px;
+    background-color: #fff5f5;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+/* 📌 Form Layout */
+form {
+    display: flex;
+    flex-direction: column;
+    max-width: 300px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* ✨ Styled Input Fields */
+.form-group input {
+    margin: 8px 0;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    width: 100%;
+    transition: all 0.3s ease-in-out;
+}
+
+/* 🟢 Focus Effect on Input */
+.form-group input:focus {
+    border-color: #00cc66;
+    outline: none;
+    box-shadow: 0px 0px 8px rgba(0, 204, 102, 0.3);
+}
+
+/* 🚀 Login Button */
+.login-button {
+    margin-top: 10px;
+    padding: 12px;
+    border: none;
+    background-color: #00cc66; /* Uber Eats Green */
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: 0.3s ease-in-out;
+    width: 100%;
+}
+
+/* 🎨 Hover & Disabled Effects */
+.login-button:hover {
+    background-color: #00994d;
+}
+
+.login-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* 🔄 Loading Animation */
+.login-button:disabled::after {
+    content: " ⏳";
+}
+
+/* 📱 Mobile Responsive */
+@media (max-width: 400px) {
+    .login-container {
+        width: 90%;
+        padding: 15px;
+    }
+
+    form {
+        max-width: 100%;
+    }
+}

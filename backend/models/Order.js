@@ -1,57 +1,57 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/sequelize');
-const Customer = require('./Customer');
-const Restaurant = require('./Restaurant');
 
 const Order = sequelize.define('Order', {
   id: {
     type: DataTypes.INTEGER,
-    autoIncrement: true,
     primaryKey: true,
+    autoIncrement: true,
   },
   customer_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: Customer,
+      model: 'Customer',
       key: 'id',
     },
-    onDelete: 'CASCADE',
   },
   restaurant_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: Restaurant,
+      model: 'Restaurant',
       key: 'id',
     },
-    onDelete: 'CASCADE',
   },
   status: {
-    type: DataTypes.ENUM( // Adjust these States as needed
-      'New',
-      'Preparing',
-      'On the Way',
-      'Pick-up Ready',
-      'Delivered',
-      'Picked Up',
-      'Cancelled'
-    ),
-    allowNull: false,
+    type: DataTypes.ENUM('New', 'Preparing', 'On the Way', 'Pick-up Ready', 'Delivered', 'Picked Up', 'Cancelled'),
     defaultValue: 'New',
   },
-  total_price: {
+  total_amount: {
     type: DataTypes.DECIMAL(10, 2),
     allowNull: false,
+    get() {
+      const value = this.getDataValue('total_amount');
+      return value === null ? null : parseFloat(value);
+    }
+  },
+  delivery_address: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
+  payment_status: {
+    type: DataTypes.ENUM('Pending', 'Completed', 'Failed'),
+    defaultValue: 'Pending',
+  },
+  notes: {
+    type: DataTypes.TEXT,
+    allowNull: true,
   },
 }, {
-    tableName: 'Order',
-    timestamps: true,
-    createdAt: 'created_at',  
-    updatedAt: 'updated_at', 
+  tableName: 'Order',
+  timestamps: true,
+  createdAt: 'created_at',
+  updatedAt: 'updated_at',
 });
-
-Order.belongsTo(require('./Customer'), { foreignKey: 'customer_id' });
-Order.belongsTo(require('./Restaurant'), { foreignKey: 'restaurant_id' });
 
 module.exports = Order;

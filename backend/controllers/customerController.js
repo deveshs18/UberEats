@@ -2,132 +2,141 @@ const Customer = require('../models/Customer');
 const Favorite = require('../models/Favorite');
 const Restaurant = require('../models/Restaurant');
 
-// Get the authenticated user's profile
+// Get customer profile
 exports.getProfile = async (req, res) => {
-  try {
-    if (!req.session || !req.session.user || !req.session.user.id) {
-      return res.status(401).json({ message: 'User not authenticated' });
+    try {
+        const customerId = req.user.id;
+        const customer = await Customer.findByPk(customerId, {
+            attributes: { exclude: ['password'] }
+        });
+
+        if (!customer) {
+            return res.status(404).json({ message: 'Customer not found' });
+        }
+
+        res.status(200).json(customer);
+    } catch (error) {
+        console.error('Error fetching profile:', error);
+        res.status(500).json({ message: 'Error fetching profile', error: error.message });
     }
-
-    const userId = req.session.user.id;
-
-    // Use Sequelize's findByPk method
-    const customer = await Customer.findByPk(userId);
-
-    if (!customer) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    // Remove sensitive information before sending
-    const userProfile = customer.toJSON();
-    delete userProfile.password;
-
-    res.status(200).json(userProfile);
-  } catch (error) {
-    console.error('Error retrieving profile:', error);
-    res.status(500).json({ message: 'Error retrieving profile', error: error.message });
-  }
 };
 
-// Update the authenticated user's profile
+// Update customer profile
 exports.updateProfile = async (req, res) => {
     try {
-      if (!req.session || !req.session.user || !req.session.user.id) {
-        return res.status(401).json({ message: 'User not authenticated' });
-      }
-  
-      const userId = req.session.user.id;
-      const { name, profilePicture, country, state } = req.body;
-  
-      const customer = await Customer.findByPk(userId);
-      if (!customer) {
-        return res.status(404).json({ message: 'User not found' });
-      }
-  
-      // Update the customer details
-      await customer.update({ name, profilePicture, country, state, updatedAt: new Date() });
-  
-      res.status(200).json({ message: 'Profile updated successfully' });
+        const customerId = req.user.id;
+        const { name, email, country, state } = req.body;
+
+        const customer = await Customer.findByPk(customerId);
+        if (!customer) {
+            return res.status(404).json({ message: 'Customer not found' });
+        }
+
+        // Update only provided fields
+        if (name) customer.name = name;
+        if (email) customer.email = email;
+        if (country) customer.country = country;
+        if (state) customer.state = state;
+
+        await customer.save();
+
+        res.status(200).json({
+            message: 'Profile updated successfully',
+            customer: {
+                id: customer.id,
+                name: customer.name,
+                email: customer.email,
+                country: customer.country,
+                state: customer.state
+            }
+        });
     } catch (error) {
-      console.error('Error updating profile:', error);
-      res.status(500).json({ message: 'Error updating profile', error: error.message });
+        console.error('Error updating profile:', error);
+        res.status(500).json({ message: 'Error updating profile', error: error.message });
     }
-  };
-  
-// Get the user's favorite restaurants
+};
+
+// Get user's favorite restaurants
 exports.getFavorites = async (req, res) => {
     try {
-      if (!req.session || !req.session.user || !req.session.user.id) {
-        return res.status(401).json({ message: 'User not authenticated' });
-      }
-  
-      const userId = req.session.user.id;
-  
-      // Retrieve the user's favorite restaurants
-      const favorites = await Favorite.findAll({
-        where: { customer_id: userId },
-        include: [{
-            model: Restaurant,
-            as: 'Restaurant', // Ensure this matches the association alias if used
-          }],
-      });
-  
-      res.status(200).json(favorites);
+        const customerId = req.user.id;
+        
+        const favorites = await Favorite.findAll({
+            where: { customer_id: customerId },
+            attributes: ['restaurant_id']
+        });
+
+        res.json(favorites);
     } catch (error) {
-      console.error('Error retrieving favorites:', error);
-      res.status(500).json({ message: 'Error retrieving favorites', error: error.message });
+        console.error('Error getting favorites:', error);
+        res.status(500).json({ message: 'Error retrieving favorites', error: error.message });
     }
 };
 
 // Add a restaurant to favorites
 exports.addFavorite = async (req, res) => {
     try {
-      if (!req.session || !req.session.user || !req.session.user.id) {
-        return res.status(401).json({ message: 'User not authenticated' });
-      }
-  
-      const userId = req.session.user.id;
-      const restaurantId = parseInt(req.params.restaurantId, 10); // Convert to integer
+        const customerId = req.user.id;
+        const { restaurantId } = req.params;
 
-      
-      console.log('User ID:', userId);
-      console.log('Restaurant ID:', restaurantId);
+        // Check if restaurant exists
+        const restaurant = await Restaurant.findByPk(restaurantId);
+        if (!restaurant) {
+            return res.status(404).json({ message: "Restaurant not found" });
+        }
 
-      // Add a new favorite
-      await Favorite.create({ customer_id: userId, restaurant_id: restaurantId });
-  
-      res.status(201).json({ message: 'Restaurant added to favorites' });
+        // Prevent duplicate entries
+        const existingFavorite = await Favorite.findOne({ 
+            where: { 
+                customer_id: customerId, 
+                restaurant_id: restaurantId 
+            } 
+        });
+        
+        if (existingFavorite) {
+            return res.status(400).json({ message: "Restaurant already in favorites" });
+        }
+
+        // Add favorite restaurant
+        await Favorite.create({ 
+            customer_id: customerId, 
+            restaurant_id: restaurantId 
+        });
+
+        res.status(201).json({ 
+            success: true,
+            message: 'Restaurant added to favorites' 
+        });
     } catch (error) {
-      console.error('Error adding favorite:', error);
-      res.status(500).json({ message: 'Error adding favorite', error: error.message });
+        console.error('Error adding favorite:', error);
+        res.status(500).json({ message: 'Error adding favorite', error: error.message });
     }
 };
-  
+
 // Remove a restaurant from favorites
 exports.removeFavorite = async (req, res) => {
     try {
-      if (!req.session || !req.session.user || !req.session.user.id) {
-        return res.status(401).json({ message: 'User not authenticated' });
-      }
-  
-      const userId = req.session.user.id;
-      const restaurantId = parseInt(req.params.restaurantId, 10); // Convert to integer
-      
-      // Remove the favorite entry
-      const favorite = await Favorite.findOne({
-        where: { customer_id: userId, restaurant_id: restaurantId }
-      });
-  
-      if (!favorite) {
-        return res.status(404).json({ message: 'Favorite not found' });
-      }
-  
-      await favorite.destroy();
-  
-      res.status(200).json({ message: 'Restaurant removed from favorites' });
+        const customerId = req.user.id;
+        const { restaurantId } = req.params;
+
+        const favorite = await Favorite.findOne({
+            where: { 
+                customer_id: customerId, 
+                restaurant_id: restaurantId 
+            }
+        });
+
+        if (!favorite) {
+            return res.status(404).json({ message: 'Favorite not found' });
+        }
+
+        await favorite.destroy();
+        res.status(200).json({ 
+            success: true,
+            message: 'Restaurant removed from favorites' 
+        });
     } catch (error) {
-      console.error('Error removing favorite:', error);
-      res.status(500).json({ message: 'Error removing favorite', error: error.message });
+        console.error('Error removing favorite:', error);
+        res.status(500).json({ message: 'Error removing favorite', error: error.message });
     }
 };
-  

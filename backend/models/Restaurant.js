@@ -43,6 +43,27 @@ const Restaurant = sequelize.define('Restaurant', {
     type: DataTypes.STRING,
     allowNull: true, 
   },
+  cuisine: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  delivery_time: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  rating: {
+    type: DataTypes.FLOAT,
+    allowNull: true,
+    defaultValue: 0,
+    validate: {
+      min: 0,
+      max: 5
+    }
+  },
+  price_range: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  }
 }, {
   tableName: 'Restaurant',
   timestamps: true, 

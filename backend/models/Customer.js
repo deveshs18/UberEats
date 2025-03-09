@@ -24,7 +24,7 @@ const Customer = sequelize.define('Customer', {
     allowNull: false,
   },
   profilePicture: {
-    type: DataTypes.STRING, // Fix this in database schema?
+    type: DataTypes.STRING,
     allowNull: true,
   },
   country: {
